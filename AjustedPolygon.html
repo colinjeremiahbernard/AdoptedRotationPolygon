@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta name="description" content="CS4406 Computer Graphics - Assignment #2" />
+  <meta charset="utf-8" />
+  <title>CS4406 Computer Graphics - Programming Assignment U#2</title>
+  <style>
+    body {
+      margin: 0;
+    }
+
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="container"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/94/three.min.js"></script>
+
+  <script>
+    // Set scene size
+    var WIDTH = 500, HEIGHT = 500;
+
+    // Set camera attributes
+    var VIEW_ANGLE = 45, ASPECT = WIDTH / HEIGHT, NEAR = 1, FAR = 1000;
+
+    // Create WebGL renderer, scene, and camera
+    var renderer = new THREE.WebGLRenderer();
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
+
+    // Set camera position
+    camera.position.z = 30;
+    scene.add(camera);
+
+    // Start renderer
+    renderer.setSize(WIDTH, HEIGHT);
+    document.body.appendChild(renderer.domElement);
+
+    // Create geometry for the 5-vertex polygon (pentagon)
+    var geometry = new THREE.Geometry();
+    var radius = 5;
+    for (let i = 0; i < 5; i++) {
+      var angle = (i / 5) * Math.PI * 2;
+      geometry.vertices.push(new THREE.Vector3(Math.cos(angle) * radius, Math.sin(angle) * radius, 0));
+    }
+    geometry.faces.push(new THREE.Face3(0, 1, 2));
+    geometry.faces.push(new THREE.Face3(2, 3, 4));
+    geometry.faces.push(new THREE.Face3(4, 0, 2));
+
+    // Create a red or blue material
+    var material = new THREE.MeshBasicMaterial({ color: 0xFF0000, side: THREE.DoubleSide });  // Red surface
+    // Use 0x0000FF for a blue surface instead.
+
+    // Create the mesh and add it to the scene
+    var polygonMesh = new THREE.Mesh(geometry, material);
+    scene.add(polygonMesh);
+
+    // Animation: Rotate the polygon slowly around its axis
+    function animate() {
+      requestAnimationFrame(animate);
+      polygonMesh.rotation.z += 0.01;  // Slow rotation
+      renderer.render(scene, camera);
+    }
+
+    // Start the animation loop
+    animate();
+  </script>
+</body>
+
+</html>
